@@ -8,7 +8,7 @@ using HotelListing.Data;
 
 namespace HotelListing.Model
 {
-	public class HotelDto
+	public class CreateHotelDto
 	{
 		public int Id { get; set; }
 		[Required]
@@ -20,9 +20,16 @@ namespace HotelListing.Model
 		
 		[Required]
 		[StringLength(maximumLength: 50, ErrorMessage = "Country name is too long")]
+		[Range(1,5)]
 		public double Rating { get; set; }
-		
 		public int CountryId { get; set; }
-		public Country Country { get; set; }
+
+
+	}
+	public class HotelDto : CreateHotelDto
+	{
+		public int Id { get; set; }
+		public CountryDto CountryDto { get; set; }
+
 	}
 }

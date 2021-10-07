@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace HotelListing.Model
 {
-	public class CountryDto
+	public class CreateCountryDto
 	{
-		public int Id { get; set; }
 		
 		[Required]
 		[StringLength(maximumLength:50,ErrorMessage = "Country name is too long")]
@@ -19,7 +18,14 @@ namespace HotelListing.Model
 		
 		[Required]
 		[Display(Name = "Short Name")]
-		[StringLength(maximumLength:5,ErrorMessage = "Short name too")]
+		[StringLength(maximumLength:5,ErrorMessage = "Short name too long")]
 		public string ShortName { get; set; }
+	}
+
+	public class CountryDto: CreateCountryDto
+	{
+		public int Id { get; set; }
+		public virtual IList<HotelDto> Hotels { get; set; }
+
 	}
 }
