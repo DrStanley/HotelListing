@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.Data
 {
-	public class DatabaseContext: DbContext
+	public class DatabaseContext: IdentityDbContext<ApiUser>
 	{
 		//Bridge btw Db and application
 		public DatabaseContext(DbContextOptions options):base(options)
@@ -19,6 +20,8 @@ namespace HotelListing.Data
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			base.OnModelCreating(modelBuilder);
+
 			modelBuilder.Entity<Country>().HasData(
 				new Country
 				{
@@ -72,7 +75,6 @@ namespace HotelListing.Data
 					Address = "Negril",
 					Rating = 4.5
 				});
-			base.OnModelCreating(modelBuilder);
 		}
 
 	}

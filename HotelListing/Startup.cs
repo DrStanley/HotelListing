@@ -25,10 +25,14 @@ namespace HotelListing
 		public void ConfigureServices(IServiceCollection services)
 		{
 
-			services.AddTransient<IUnitOfWork, UnitOfWork>();
+			services.InjectClasses();
 			services.AddDbContext<DatabaseContext>(opt =>
 				opt.UseSqlServer(Configuration.GetConnectionString("SqlConnection")
 				));
+
+			services.AddAuthentication();
+			services.ConfigureIdentity();
+
 			services.AddCors(o =>
 			{
 				o.AddPolicy("AllowAll", builder =>
