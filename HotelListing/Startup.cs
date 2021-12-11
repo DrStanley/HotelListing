@@ -32,6 +32,7 @@ namespace HotelListing
 
 			services.AddAuthentication();
 			services.ConfigureIdentity();
+			services.ConfigJWT(Configuration);
 
 			services.AddCors(o =>
 			{

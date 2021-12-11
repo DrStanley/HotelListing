@@ -39,16 +39,17 @@ namespace HotelListing.Controllers
 			try
 			{
 				var user = _mapper.Map<ApiUser>(userDTO);
-				user.UserName = userDTO.Email
+				user.UserName = userDTO.Email;
 				var res = await _userManager.CreateAsync(user);
 				if (!res.Succeeded)
 				{
 					foreach (var error in res.Errors)
 					{
 						ModelState.AddModelError(error.Code, error.Description);
-					}
+					} 
 					return BadRequest(ModelState);
 				}
+				await _userManager.AddToRolesAsync(user, userDTO.Roles);
 				return Accepted();
 
 			}
