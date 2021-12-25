@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelListing.Data;
 using HotelListing.Model;
+using HotelListing.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,13 +18,17 @@ namespace HotelListing.Controllers
 		//private readonly SignInManager<ApiUser> _signInManager;
 		private readonly ILogger<AccountController> _logger;
 		private readonly IMapper _mapper;
+		private readonly IAuthManager _authManager;
 
-		public AccountController(IMapper mapper, SignInManager<ApiUser> signInManager, UserManager<ApiUser> userManager, ILogger<AccountController> logger)
+
+		public AccountController(IMapper mapper,
+			UserManager<ApiUser> userManager, ILogger<AccountController> logger, IAuthManager authManager)
 		{
 			_mapper = mapper;
 			//_signInManager = signInManager;
 			_userManager = userManager;
 			_logger = logger;
+			_authManager = authManager;
 		}
 
 
@@ -46,10 +51,11 @@ namespace HotelListing.Controllers
 					foreach (var error in res.Errors)
 					{
 						ModelState.AddModelError(error.Code, error.Description);
-					} 
+					}
 					return BadRequest(ModelState);
 				}
-				await _userManager.AddToRolesAsync(user, userDTO.Roles);
+				if(userDTO.Roles.Count>0)
+					await _userManager.AddToRolesAsync(user, userDTO.Roles);
 				return Accepted();
 
 			}
@@ -60,8 +66,8 @@ namespace HotelListing.Controllers
 			}
 		}
 
-		/*[HttpPost]
-		[Route("login")]		
+		[HttpPost]
+		[Route("login")]
 		public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
 		{
 			_logger.LogInformation($"Login Attempt for {loginDTO.Email}");
@@ -71,12 +77,11 @@ namespace HotelListing.Controllers
 			}
 			try
 			{
-				var res = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, false, false);
-				if (!res.Succeeded)
+				if (!await _authManager.ValidateUser(loginDTO))
 				{
-					return Unauthorized(loginDTO);
+					return Unauthorized(new {Message="Unauthorized User", User = loginDTO });
 				}
-				return Ok();
+				return Accepted(new { Token = await _authManager.CreateToken() });
 			}
 			catch (Exception e)
 			{
@@ -85,6 +90,6 @@ namespace HotelListing.Controllers
 			}
 			return View();
 		}
-*/
+
 	}
 }

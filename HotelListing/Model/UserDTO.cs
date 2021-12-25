@@ -25,7 +25,6 @@ namespace HotelListing.Model
 		public string Email { get; set; }
 
 		[Required]
-		[StringLength(1)]
 		[DataType(DataType.Password)]
 		public string Password { get; set; }
 	}

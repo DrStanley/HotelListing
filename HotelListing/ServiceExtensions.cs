@@ -1,4 +1,5 @@
 ﻿using HotelListing.Data;
+using HotelListing.Services;
 using HotelListing.Services.IRepository;
 using HotelListing.Services.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,6 +27,9 @@ namespace HotelListing
 		public static void InjectClasses(this IServiceCollection service)
 		{
 			service.AddTransient<IUnitOfWork, UnitOfWork>();
+			service.AddTransient<IAuthManager, AuthManager>();
+			/*service.AddTransient<SignInManager<ApiUser>>();
+			service.AddTransient<UserManager<ApiUser>>();*/
 		}
 		public static void ConfigJWT(this IServiceCollection service,IConfiguration configuration)
 		{
