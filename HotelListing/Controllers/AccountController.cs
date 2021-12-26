@@ -45,7 +45,7 @@ namespace HotelListing.Controllers
 			{
 				var user = _mapper.Map<ApiUser>(userDTO);
 				user.UserName = userDTO.Email;
-				var res = await _userManager.CreateAsync(user);
+				var res = await _userManager.CreateAsync(user,userDTO.Password);
 				if (!res.Succeeded)
 				{
 					foreach (var error in res.Errors)
@@ -54,8 +54,8 @@ namespace HotelListing.Controllers
 					}
 					return BadRequest(ModelState);
 				}
-				if(userDTO.Roles.Count>0)
-					await _userManager.AddToRolesAsync(user, userDTO.Roles);
+				/*if(userDTO.Roles.Count>0)
+					await _userManager.AddToRolesAsync(user, userDTO.Roles);*/
 				return Accepted();
 
 			}

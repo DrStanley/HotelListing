@@ -37,7 +37,7 @@ namespace HotelListing.Services
 			var jwtset = _configuration.GetSection("JWT");
 			var exp = DateTime.Now.AddHours(Convert.ToDouble(jwtset.GetSection("lifetime").Value));
 			var token = new JwtSecurityToken(
-				issuer: jwtset.GetSection("validIsssuer").Value,
+				issuer: jwtset.GetSection("Issuer").Value,
 				claims: claims,
 				expires:exp,
 				signingCredentials: signinCred
@@ -63,12 +63,14 @@ namespace HotelListing.Services
 
 		private SigningCredentials GetSignInCred()
 		{
-			var key = Environment.GetEnvironmentVariable("KEY");
+			var key = _configuration.GetSection("JWT").GetSection("SecretKey").Value;
+			//"h0t3l71s7i4g" ,"xecretKeywqejane"
+			//var key = Environment.GetEnvironmentVariable("KEY");
 			var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
 
 			return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
 		}
-
+		 
 		public async Task<bool> ValidateUser(LoginDTO loginDTO)
 		{
 			_apiUser = await _userManager.FindByNameAsync(loginDTO.Email);

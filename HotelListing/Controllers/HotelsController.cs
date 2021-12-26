@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelListing.Model;
 using HotelListing.Services.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -44,6 +45,7 @@ namespace HotelListing.Controllers
 
 		}
 
+		[Authorize]
 		[HttpGet("{id:int}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -52,7 +54,7 @@ namespace HotelListing.Controllers
 		{
 			try
 			{
-				var hotel = await _unitOfWork.HotelsRepo.Get(h => h.Id == id, new List<string> { "Hotels" });
+				var hotel = await _unitOfWork.HotelsRepo.Get(h => h.Id == id, new List<string> { "Country" });
 				var res = _mapper.Map<HotelDto>(hotel);
 				return Ok(res);
 			}
